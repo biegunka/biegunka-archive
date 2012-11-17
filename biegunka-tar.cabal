@@ -22,3 +22,16 @@ Library
   Exposed-Modules: Biegunka.Source.Tar
   GHC-Options: -Wall
                -fno-warn-unused-do-bind
+
+test-suite biegunka-tar-tests
+  type: exitcode-stdio-1.0
+  build-depends: base >= 3 && < 5,
+                 directory,
+                 filepath,
+                 HUnit,
+                 biegunka-core,
+                 biegunka-tar,
+                 file-layout
+  main-is: tests/Main.hs
+  ghc-options: -Wall
+               -fno-warn-unused-do-bind
