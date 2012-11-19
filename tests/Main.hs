@@ -35,7 +35,7 @@ basic = TestCase $ do
   -- Unpack test tar archive and check layout is correct
   helper w b l []
   -- Delete everything
-  helper w b' l' [DirectoryDoesNotExist "./test", FileDoesNotExist "./.biegunka.biegunka-tar-test"]
+  helper w b' l' [DirectoryDoesNotExist "tar/test", FileDoesNotExist "./.biegunka.biegunka-tar-test"]
  where
   b =
     tar_ "http://budueba.com/biegunka-tar-test.tar" "tar/test"
@@ -55,7 +55,8 @@ basic = TestCase $ do
 
   b' = return ()
   l' = do
-    directory_ "test"
+    directory "tar" $
+      directory_ "test"
     file_ ".biegunka.biegunka-tar-test"
 
 
@@ -70,7 +71,7 @@ advanced = TestCase $ do
   helper w b l []
   -- Delete everything
   helper w b' l'
-    [ DirectoryDoesNotExist "./test"
+    [ DirectoryDoesNotExist "tar/test"
     , FileDoesNotExist "sandbox/tar/s"
     , FileDoesNotExist "sandbox/tar/t"
     , FileDoesNotExist "./.biegunka.biegunka-tar-test"
@@ -100,7 +101,8 @@ advanced = TestCase $ do
 
   b' = return ()
   l' = do
-    directory_ "test"
+    directory "tar" $
+      directory_ "test"
     directory "sandbox" $
       directory "tar" $ do
         file "s" "test1\n"
@@ -117,11 +119,11 @@ compressed = TestCase $ do
   -- Uncompress and unpack gzipped tar archive and check layout is correct
   helper w bgz l []
   -- Delete everything
-  helper w b' l' [DirectoryDoesNotExist "./test", FileDoesNotExist "./.biegunka.biegunka-tar-test"]
+  helper w b' l' [DirectoryDoesNotExist "tar/test", FileDoesNotExist "./.biegunka.biegunka-tar-test"]
   -- Uncompress and unpack bzipped tar archive and check layout is correct
   helper w bbz2 l []
   -- Delete everything
-  helper w b' l' [DirectoryDoesNotExist "./test", FileDoesNotExist "./.biegunka.biegunka-tar-test"]
+  helper w b' l' [DirectoryDoesNotExist "tar/test", FileDoesNotExist "./.biegunka.biegunka-tar-test"]
  where
   bgz =
     tar_ "http://budueba.com/biegunka-tar-test.tar.gz" "tar/test"
@@ -143,7 +145,8 @@ compressed = TestCase $ do
 
   b' = return ()
   l' = do
-    directory_ "test"
+    directory "tar" $
+      directory_ "test"
     file_ ".biegunka.biegunka-tar-test"
 
 
