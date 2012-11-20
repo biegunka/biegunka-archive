@@ -12,7 +12,7 @@ Build-Type: Simple
 Library
   Build-Depends: base >= 3 && < 5,
                  biegunka-core,
-                 lens,
+                 filepath,
                  free,
                  tar,
                  zlib,

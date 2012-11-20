@@ -10,10 +10,9 @@ module Biegunka.Source.Tar
 import qualified Codec.Archive.Tar as Tar
 import qualified Codec.Compression.GZip as GZip (decompress)
 import qualified Codec.Compression.BZip as BZip (decompress)
-import           Control.Lens ((^.))
 import           Control.Monad.Free (liftF)
 import           Data.ByteString.Lazy (ByteString)
-import           System.FilePath.Lens (extension)
+import           System.FilePath (takeExtension)
 
 import Biegunka.DSL (Script, Layer(Files, Source), Command(S))
 import Biegunka.Source.Common (update)
@@ -50,7 +49,7 @@ updateTar url path = update url path (Tar.unpack path . Tar.read . decompress ur
 
 
 decompress ∷ String → ByteString → ByteString
-decompress url = case url ^. extension of
+decompress url = case takeExtension url of
   ".gz" → GZip.decompress
   ".bz2" → BZip.decompress
   _ → id
