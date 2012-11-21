@@ -15,7 +15,7 @@ import           Data.ByteString.Lazy (ByteString)
 import           System.FilePath (takeExtension)
 
 import Biegunka.DSL (Script, Layer(Files, Source), Command(S))
-import Biegunka.Source.Common (update)
+import Biegunka.Source.Archive (update)
 
 
 -- | Download and extract tar archive (possibly with compression)

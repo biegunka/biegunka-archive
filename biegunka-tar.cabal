@@ -13,13 +13,17 @@ Library
   Build-Depends: base >= 3 && < 5,
                  biegunka-core,
                  filepath,
+                 directory,
                  free,
                  tar,
                  zlib,
                  bzlib,
+                 download-curl,
+                 SHA,
                  bytestring
   HS-Source-Dirs: src
   Exposed-Modules: Biegunka.Source.Tar
+  Other-Modules: Biegunka.Source.Archive
   GHC-Options: -Wall
                -fno-warn-unused-do-bind
 
