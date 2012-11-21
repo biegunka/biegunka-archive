@@ -1,6 +1,6 @@
-Name: biegunka-tar
+Name: biegunka-archive
 Version: 0.1.0.0
-Synopsis: Tar archives support as Source.
+Synopsis: Tar/Zip archives support as Source.
 License: MIT
 License-file: LICENSE
 Author: Matvey Aksenov
@@ -15,14 +15,16 @@ Library
                  filepath,
                  directory,
                  free,
-                 tar,
                  zlib,
                  bzlib,
+                 tar,
+                 zip-archive,
                  download-curl,
                  SHA,
                  bytestring
   HS-Source-Dirs: src
   Exposed-Modules: Biegunka.Source.Tar
+                   Biegunka.Source.Zip
   Other-Modules: Biegunka.Source.Archive
   GHC-Options: -Wall
                -fno-warn-unused-do-bind
@@ -30,12 +32,25 @@ Library
 test-suite biegunka-tar-tests
   type: exitcode-stdio-1.0
   build-depends: base >= 3 && < 5,
+                 biegunka-core,
+                 biegunka-archive,
                  directory,
                  filepath,
                  HUnit,
-                 biegunka-core,
-                 biegunka-tar,
                  directory-layout
-  main-is: tests/Main.hs
+  main-is: tests/tar/Main.hs
+  ghc-options: -Wall
+               -fno-warn-unused-do-bind
+
+test-suite biegunka-zip-tests
+  type: exitcode-stdio-1.0
+  build-depends: base >= 3 && < 5,
+                 biegunka-core,
+                 biegunka-archive,
+                 directory,
+                 filepath,
+                 HUnit,
+                 directory-layout
+  main-is: tests/zip/Main.hs
   ghc-options: -Wall
                -fno-warn-unused-do-bind

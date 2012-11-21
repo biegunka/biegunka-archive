@@ -1,6 +1,6 @@
 {-# LANGUAGE UnicodeSyntax #-}
 {-# OPTIONS_HADDOCK hide #-}
-module Biegunka.Source.Archive where
+module Biegunka.Source.Archive (update) where
 
 import Control.Applicative ((<$>))
 import Control.Monad (when)
