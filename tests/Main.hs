@@ -6,9 +6,9 @@ module Main where
 import System.Exit (exitFailure, exitSuccess)
 
 import Biegunka
-import Biegunka.FileLayout
 import Biegunka.Source.Tar
 import System.Directory (getHomeDirectory)
+import System.Directory.Layout
 import Test.HUnit
 
 
@@ -150,7 +150,7 @@ compressed = TestCase $ do
     file_ ".biegunka.biegunka-tar-test"
 
 
-helper ∷ FilePath → Script Source → FL () → [FLCheckFailure] → IO ()
+helper ∷ FilePath → Script Source → DL () → [DLCheckFailure] → IO ()
 helper d s l xs = do
   execute $ profile "biegunka-tar-test" s
   xs' ← check l d

@@ -31,7 +31,7 @@ test-suite biegunka-tar-tests
                  HUnit,
                  biegunka-core,
                  biegunka-tar,
-                 file-layout
+                 directory-layout
   main-is: tests/Main.hs
   ghc-options: -Wall
                -fno-warn-unused-do-bind
