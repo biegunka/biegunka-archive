@@ -13,7 +13,7 @@ import Codec.Archive.Zip (toArchive, extractFilesFromArchive)
 import Control.Monad.Free (liftF)
 import System.Directory (createDirectoryIfMissing, getCurrentDirectory, setCurrentDirectory)
 
-import Biegunka.DSL (Script, Layer(Files, Source), Command(S))
+import Biegunka.Language (Script, Layer(Files, Source), Command(S))
 import Biegunka.Source.Archive (update)
 
 

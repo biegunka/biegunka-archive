@@ -14,7 +14,7 @@ import           Control.Monad.Free (liftF)
 import           Data.ByteString.Lazy (ByteString)
 import           System.FilePath (takeExtension)
 
-import Biegunka.DSL (Script, Layer(Files, Source), Command(S))
+import Biegunka.Language (Script, Layer(Files, Source), Command(S))
 import Biegunka.Source.Archive (update)
 
 
