@@ -29,7 +29,7 @@ import Biegunka.Source.Archive (update)
 --  * link ${HOME}\/git\/archive to ${HOME}\/some\/not\/so\/long\/path
 --
 --  * link ${HOME}\/git\/archive\/important.file to ${HOME}\/.config
-zip ∷ String → FilePath → Script Files () → Script Source ()
+zip ∷ String → FilePath → Script Files → Script Source
 zip url path script = liftF $ S url path script (updateZip url) ()
 
 
@@ -38,7 +38,7 @@ zip url path script = liftF $ S url path script (updateZip url) ()
 -- > zip_ "https://example.com/archive.zip" "git/archive"
 --
 --  * download and extract archive from https:\/\/example.com\/archive.zip to ${HOME}\/git\/archive
-zip_ ∷ String → FilePath → Script Source ()
+zip_ ∷ String → FilePath → Script Source
 zip_ url path = zip url path $ return ()
 
 
