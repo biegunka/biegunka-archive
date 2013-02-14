@@ -14,7 +14,7 @@ import           Control.Monad.Free (liftF)
 import           Data.ByteString.Lazy (ByteString)
 import           System.FilePath (takeExtension)
 
-import Biegunka.Language (Script, Layer(Files, Source), Command(S))
+import Biegunka.Language (Script, Layer(Files, Sources), Command(S))
 import Biegunka.Source.Archive (update)
 
 
@@ -30,7 +30,7 @@ import Biegunka.Source.Archive (update)
 --  * link ${HOME}\/git\/archive to ${HOME}\/some\/not\/so\/long\/path
 --
 --  * link ${HOME}\/git\/archive\/important.file to ${HOME}\/.config
-tar ∷ String → FilePath → Script Files → Script Source
+tar ∷ String → FilePath → Script Files → Script Sources
 tar url path script = liftF $ S url path script (updateTar url) ()
 
 
@@ -40,7 +40,7 @@ tar url path script = liftF $ S url path script (updateTar url) ()
 -- > tar_ "https://example.com/archive.tar.gz" "git/archive"
 --
 --  * download and extract archive from https:\/\/example.com\/archive.tar.gz to ${HOME}\/git\/archive
-tar_ ∷ String → FilePath → Script Source
+tar_ ∷ String → FilePath → Script Sources
 tar_ url path = tar url path $ return ()
 
 
