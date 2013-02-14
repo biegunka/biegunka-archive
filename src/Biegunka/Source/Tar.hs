@@ -31,7 +31,7 @@ import Biegunka.Source.Archive (update)
 --
 --  * link ${HOME}\/git\/archive\/important.file to ${HOME}\/.config
 tar ∷ String → FilePath → Script Files → Script Sources
-tar url path script = liftF $ S url path script (updateTar url) ()
+tar url path script = liftF $ S "tar" url path script (updateTar url) ()
 
 
 -- | Download and extract tar archive (possibly with compression)
