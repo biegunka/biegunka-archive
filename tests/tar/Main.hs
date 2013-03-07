@@ -7,6 +7,7 @@ import System.Exit (exitFailure, exitSuccess)
 
 import Biegunka
 import Biegunka.Source.Tar
+import Control.Lens
 import System.Directory (getHomeDirectory)
 import System.Directory.Layout
 import Test.HUnit
@@ -35,7 +36,7 @@ basic = TestCase $ do
   -- Unpack test tar archive and check layout is correct
   helper w b l []
   -- Delete everything
-  helper w b' l' [DirectoryDoesNotExist "tar/test", FileDoesNotExist "./.biegunka.biegunka-tar-test"]
+  helper w b' l' [DirectoryDoesNotExist "tar/test", FileDoesNotExist ".biegunka/biegunka-tar-test"]
  where
   b =
     tar_ "http://budueba.com/biegunka-tar-test.tar" "tar/test"
@@ -51,13 +52,15 @@ basic = TestCase $ do
         directory "w" $
           file_ "u"
         file_ "q"
-    file_ ".biegunka.biegunka-tar-test"
+    directory ".biegunka" $
+      file_ "biegunka-tar-test"
 
   b' = return ()
   l' = do
     directory "tar" $
       directory_ "test"
-    file_ ".biegunka.biegunka-tar-test"
+    directory ".biegunka" $
+      file_ "biegunka-tar-test"
 
 
 -- | Test advanced .tar handling
@@ -74,7 +77,7 @@ advanced = TestCase $ do
     [ DirectoryDoesNotExist "tar/test"
     , FileDoesNotExist "sandbox/tar/s"
     , FileDoesNotExist "sandbox/tar/t"
-    , FileDoesNotExist "./.biegunka.biegunka-tar-test"
+    , FileDoesNotExist ".biegunka/biegunka-tar-test"
     ]
  where
   b =
@@ -97,7 +100,8 @@ advanced = TestCase $ do
       directory "tar" $ do
         file "s" "test1\n"
         file "t" "test2\n"
-    file_ ".biegunka.biegunka-tar-test"
+    directory ".biegunka" $
+      file_ "biegunka-tar-test"
 
   b' = return ()
   l' = do
@@ -107,7 +111,8 @@ advanced = TestCase $ do
       directory "tar" $ do
         file "s" "test1\n"
         file "t" "test2\n"
-    file_ ".biegunka.biegunka-tar-test"
+    directory ".biegunka" $
+      file_ "biegunka-tar-test"
 
 
 -- | Test compressed .tar handling
@@ -119,11 +124,11 @@ compressed = TestCase $ do
   -- Uncompress and unpack gzipped tar archive and check layout is correct
   helper w bgz l []
   -- Delete everything
-  helper w b' l' [DirectoryDoesNotExist "tar/test", FileDoesNotExist "./.biegunka.biegunka-tar-test"]
+  helper w b' l' [DirectoryDoesNotExist "tar/test", FileDoesNotExist ".biegunka/biegunka-tar-test"]
   -- Uncompress and unpack bzipped tar archive and check layout is correct
   helper w bbz2 l []
   -- Delete everything
-  helper w b' l' [DirectoryDoesNotExist "tar/test", FileDoesNotExist "./.biegunka.biegunka-tar-test"]
+  helper w b' l' [DirectoryDoesNotExist "tar/test", FileDoesNotExist ".biegunka/biegunka-tar-test"]
  where
   bgz =
     tar_ "http://budueba.com/biegunka-tar-test.tar.gz" "tar/test"
@@ -141,17 +146,19 @@ compressed = TestCase $ do
         directory "w" $
           file_ "u"
         file_ "q"
-    file_ ".biegunka.biegunka-tar-test"
+    directory ".biegunka" $
+      file_ "biegunka-tar-test"
 
   b' = return ()
   l' = do
     directory "tar" $
       directory_ "test"
-    file_ ".biegunka.biegunka-tar-test"
+    directory ".biegunka" $
+      file_ "biegunka-tar-test"
 
 
-helper ∷ FilePath → Script Source → DL () → [DLCheckFailure] → IO ()
+helper ∷ FilePath → Script Sources → DL () → [DLCheckFailure] → IO ()
 helper d s l xs = do
-  execute $ profile "biegunka-tar-test" s
+  biegunka (set root "~") (profile "biegunka-tar-test" s) (execute id)
   xs' ← check l d
   assertEqual "tar-tests" xs xs'

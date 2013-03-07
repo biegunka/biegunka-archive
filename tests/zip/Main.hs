@@ -8,6 +8,7 @@ import System.Exit (exitFailure, exitSuccess)
 
 import Biegunka
 import Biegunka.Source.Zip
+import Control.Lens
 import System.Directory (getHomeDirectory)
 import System.Directory.Layout
 import Test.HUnit
@@ -35,7 +36,7 @@ basic = TestCase $ do
   -- Unpack test zip archive and check layout is correct
   helper w b l []
   -- Delete everything
-  helper w b' l' [DirectoryDoesNotExist "zip/test", FileDoesNotExist "./.biegunka.biegunka-zip-test"]
+  helper w b' l' [DirectoryDoesNotExist "zip/test", FileDoesNotExist ".biegunka/biegunka-zip-test"]
  where
   b =
     zip_ "http://budueba.com/biegunka-zip-test.zip" "zip/test"
@@ -51,13 +52,15 @@ basic = TestCase $ do
         directory "w" $
           file_ "u"
         file_ "q"
-    file_ ".biegunka.biegunka-zip-test"
+    directory ".biegunka" $
+      file_ "biegunka-zip-test"
 
   b' = return ()
   l' = do
     directory "zip" $
       directory_ "test"
-    file_ ".biegunka.biegunka-zip-test"
+    directory ".biegunka" $
+      file_ "biegunka-zip-test"
 
 
 -- | Test advanced .zip handling
@@ -74,7 +77,7 @@ advanced = TestCase $ do
     [ DirectoryDoesNotExist "zip/test"
     , FileDoesNotExist "sandbox/zip/s"
     , FileDoesNotExist "sandbox/zip/t"
-    , FileDoesNotExist "./.biegunka.biegunka-zip-test"
+    , FileDoesNotExist ".biegunka/biegunka-zip-test"
     ]
  where
   b =
@@ -97,7 +100,8 @@ advanced = TestCase $ do
       directory "zip" $ do
         file "s" "test1\n"
         file "t" "test2\n"
-    file_ ".biegunka.biegunka-zip-test"
+    directory ".biegunka" $
+      file_ "biegunka-zip-test"
 
   b' = return ()
   l' = do
@@ -107,11 +111,12 @@ advanced = TestCase $ do
       directory "zip" $ do
         file "s" "test1\n"
         file "t" "test2\n"
-    file_ ".biegunka.biegunka-zip-test"
+    directory ".biegunka" $
+      file_ "biegunka-zip-test"
 
 
-helper ∷ FilePath → Script Source → DL () → [DLCheckFailure] → IO ()
+helper ∷ FilePath → Script Sources → DL () → [DLCheckFailure] → IO ()
 helper d s l xs = do
-  execute $ profile "biegunka-zip-test" s
+  biegunka (set root "~") (profile "biegunka-zip-test" s) (execute id)
   xs' ← check l d
   assertEqual "zip-tests" xs xs'

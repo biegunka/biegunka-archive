@@ -36,6 +36,7 @@ test-suite biegunka-tar-tests
                  biegunka-archive,
                  directory,
                  filepath,
+                 lens,
                  HUnit,
                  directory-layout
   main-is: tests/tar/Main.hs
@@ -49,6 +50,7 @@ test-suite biegunka-zip-tests
                  biegunka-archive,
                  directory,
                  filepath,
+                 lens,
                  HUnit,
                  directory-layout
   main-is: tests/zip/Main.hs
