@@ -10,7 +10,6 @@ module Biegunka.Source.Zip
 import Prelude hiding (zip)
 
 import Codec.Archive.Zip (toArchive, extractFilesFromArchive)
-import Control.Monad.Free (liftF)
 import System.Directory (createDirectoryIfMissing, getCurrentDirectory, setCurrentDirectory)
 
 import Biegunka.Language
@@ -29,8 +28,8 @@ import Biegunka.Source.Archive (update)
 --  * link ${HOME}\/git\/archive to ${HOME}\/some\/not\/so\/long\/path
 --
 --  * link ${HOME}\/git\/archive\/important.file to ${HOME}\/.config
-zip ∷ String → FilePath → Script Actions → Script Sources
-zip url path script = liftF $ ES "zip" url path script (updateZip url) ()
+zip ∷ String → FilePath → Script Actions () → Script Sources ()
+zip url path script = lift $ ES "zip" url path script (updateZip url) ()
 
 
 -- | Download and extract zip archive from the given url to specified path.
@@ -38,7 +37,7 @@ zip url path script = liftF $ ES "zip" url path script (updateZip url) ()
 -- > zip_ "https://example.com/archive.zip" "git/archive"
 --
 --  * download and extract archive from https:\/\/example.com\/archive.zip to ${HOME}\/git\/archive
-zip_ ∷ String → FilePath → Script Sources
+zip_ ∷ String → FilePath → Script Sources ()
 zip_ url path = zip url path $ return ()
 
 

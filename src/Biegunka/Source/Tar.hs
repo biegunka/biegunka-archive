@@ -10,7 +10,6 @@ module Biegunka.Source.Tar
 import qualified Codec.Archive.Tar as Tar
 import qualified Codec.Compression.GZip as GZip (decompress)
 import qualified Codec.Compression.BZip as BZip (decompress)
-import           Control.Monad.Free (liftF)
 import           Data.ByteString.Lazy (ByteString)
 import           System.FilePath (takeExtension)
 
@@ -30,8 +29,8 @@ import Biegunka.Source.Archive (update)
 --  * link ${HOME}\/git\/archive to ${HOME}\/some\/not\/so\/long\/path
 --
 --  * link ${HOME}\/git\/archive\/important.file to ${HOME}\/.config
-tar ∷ String → FilePath → Script Actions → Script Sources
-tar url path script = liftF $ ES "tar" url path script (updateTar url) ()
+tar ∷ String → FilePath → Script Actions () → Script Sources ()
+tar url path script = lift $ ES "tar" url path script (updateTar url) ()
 
 
 -- | Download and extract tar archive (possibly with compression)
@@ -40,7 +39,7 @@ tar url path script = liftF $ ES "tar" url path script (updateTar url) ()
 -- > tar_ "https://example.com/archive.tar.gz" "git/archive"
 --
 --  * download and extract archive from https:\/\/example.com\/archive.tar.gz to ${HOME}\/git\/archive
-tar_ ∷ String → FilePath → Script Sources
+tar_ ∷ String → FilePath → Script Sources ()
 tar_ url path = tar url path $ return ()
 
 
