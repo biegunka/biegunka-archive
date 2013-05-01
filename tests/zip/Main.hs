@@ -1,10 +1,10 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE UnicodeSyntax #-}
 module Main where
 
 import Prelude hiding (zip)
 import System.Exit (exitFailure, exitSuccess)
+import System.IO.Error
 
 import Biegunka
 import Biegunka.Source.Zip
@@ -14,9 +14,9 @@ import System.Directory.Layout
 import Test.HUnit
 
 
-main ∷ IO ()
+main :: IO ()
 main = do
-  z ← runTestTT tests
+  z <- runTestTT tests
   if errors z + failures z > 0
     then exitFailure
     else exitSuccess
@@ -29,14 +29,14 @@ main = do
 
 -- | Test basic .zip handling
 -- Assumes ~/zip directory does exist
-basic ∷ Test
+basic :: Test
 basic = TestCase $ do
-  w ← getHomeDirectory
+  w <- getHomeDirectory
 
   -- Unpack test zip archive and check layout is correct
   helper w b l []
   -- Delete everything
-  helper w b' l' [DirectoryDoesNotExist "zip/test", FileDoesNotExist ".biegunka/biegunka-zip-test"]
+  helper w b' l' [DE doesNotExistErrorType "zip/test", FE doesNotExistErrorType ".biegunka/biegunka-zip-test"]
  where
   b =
     zip_ "http://budueba.com/biegunka-zip-test.zip" "zip/test"
@@ -66,19 +66,20 @@ basic = TestCase $ do
 -- | Test advanced .zip handling
 -- Assumes ~/zip directory does exist
 -- Assumes ~/sandbox/zip directory does exist
-advanced ∷ Test
+advanced :: Test
 advanced = TestCase $ do
-  w ← getHomeDirectory
+  w <- getHomeDirectory
   -- Unpack test zip archive, copy some things
   -- and check layout is correct
   helper w b l []
   -- Delete everything
   helper w b' l'
-    [ DirectoryDoesNotExist "zip/test"
-    , FileDoesNotExist "sandbox/zip/s"
-    , FileDoesNotExist "sandbox/zip/t"
-    , FileDoesNotExist ".biegunka/biegunka-zip-test"
+    [ DE doesNotExistErrorType "zip/test"
+    , RF doesNotExistErrorType "sandbox/zip/s" "test1\n"
+    , RF doesNotExistErrorType "sandbox/zip/t" "test2\n"
+    , FE doesNotExistErrorType ".biegunka/biegunka-zip-test"
     ]
+
  where
   b =
     zip "http://budueba.com/biegunka-zip-test.zip" "zip/test" $ do
@@ -115,8 +116,8 @@ advanced = TestCase $ do
       file_ "biegunka-zip-test"
 
 
-helper ∷ FilePath → Script Sources → DL () → [DLCheckFailure] → IO ()
+helper :: FilePath -> Script Sources () -> Layout -> [LayoutException] -> IO ()
 helper d s l xs = do
   biegunka (set root "~") (profile "biegunka-zip-test" s) (execute id)
-  xs' ← check l d
+  xs' <- check l d
   assertEqual "zip-tests" xs xs'

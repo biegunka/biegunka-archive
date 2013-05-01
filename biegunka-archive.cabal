@@ -38,7 +38,7 @@ test-suite biegunka-tar-tests
                  filepath,
                  lens,
                  HUnit,
-                 directory-layout
+                 directory-layout >= 0.3.0.0
   main-is: tests/tar/Main.hs
   ghc-options: -Wall
                -fno-warn-unused-do-bind
@@ -52,7 +52,7 @@ test-suite biegunka-zip-tests
                  filepath,
                  lens,
                  HUnit,
-                 directory-layout
+                 directory-layout >= 0.3.0.0
   main-is: tests/zip/Main.hs
   ghc-options: -Wall
                -fno-warn-unused-do-bind
