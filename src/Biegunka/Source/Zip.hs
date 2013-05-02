@@ -29,7 +29,7 @@ import Biegunka.Source.Archive (update)
 --
 --  * link ${HOME}\/git\/archive\/important.file to ${HOME}\/.config
 zip ∷ String → FilePath → Script Actions () → Script Sources ()
-zip url path script = lift $ ES "zip" url path script (updateZip url) ()
+zip url path script = lift $ ES (Source "zip" url path (updateZip url)) script ()
 
 
 -- | Download and extract zip archive from the given url to specified path.
