@@ -1,5 +1,4 @@
 {-# LANGUAGE DataKinds #-}
-{-# LANGUAGE UnicodeSyntax #-}
 {-# OPTIONS_HADDOCK prune #-}
 -- | Biegunka.Source.Tar - functions to work with [.tar, .tar.gz, .tar.bz2] archives as sources
 module Biegunka.Source.Tar
@@ -30,7 +29,7 @@ import Biegunka.Source.Archive (update)
 --  * link ${HOME}\/git\/archive to ${HOME}\/some\/not\/so\/long\/path
 --
 --  * link ${HOME}\/git\/archive\/important.file to ${HOME}\/.config
-tar ∷ String → FilePath → Script Actions () → Script Sources ()
+tar :: String -> FilePath -> Script Actions () -> Script Sources ()
 tar url path script = sourced "tar" url path script (updateTar url)
 
 
@@ -40,16 +39,16 @@ tar url path script = sourced "tar" url path script (updateTar url)
 -- > tar_ "https://example.com/archive.tar.gz" "git/archive"
 --
 --  * download and extract archive from https:\/\/example.com\/archive.tar.gz to ${HOME}\/git\/archive
-tar_ ∷ String → FilePath → Script Sources ()
+tar_ :: String -> FilePath -> Script Sources ()
 tar_ url path = tar url path $ return ()
 
 
-updateTar ∷ String → FilePath → IO ()
+updateTar :: String -> FilePath -> IO ()
 updateTar url path = update url path (Tar.unpack path . Tar.read . decompress url)
 
 
-decompress ∷ String → ByteString → ByteString
+decompress :: String -> ByteString -> ByteString
 decompress url = case takeExtension url of
-  ".gz" → GZip.decompress
-  ".bz2" → BZip.decompress
-  _ → id
+  ".gz" -> GZip.decompress
+  ".bz2" -> BZip.decompress
+  _ -> id
