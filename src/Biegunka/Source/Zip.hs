@@ -13,6 +13,7 @@ import Codec.Archive.Zip (toArchive, extractFilesFromArchive)
 import System.Directory (createDirectoryIfMissing, getCurrentDirectory, setCurrentDirectory)
 
 import Biegunka.Language
+import Biegunka.Script (Script, sourced)
 import Biegunka.Source.Archive (update)
 
 
@@ -29,7 +30,7 @@ import Biegunka.Source.Archive (update)
 --
 --  * link ${HOME}\/git\/archive\/important.file to ${HOME}\/.config
 zip ∷ String → FilePath → Script Actions () → Script Sources ()
-zip url path script = lift $ ES (Source "zip" url path (updateZip url)) script ()
+zip url path script = sourced "zip" url path script (updateZip url)
 
 
 -- | Download and extract zip archive from the given url to specified path.
