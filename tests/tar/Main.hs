@@ -134,7 +134,7 @@ compressed = TestCase $ do
   -- Uncompress and unpack bzipped tar archive and check layout is correct
   helper w bbz2 l []
   -- Delete everything
-  helper w b' l' 
+  helper w b' l'
     [ DE doesNotExistErrorType "tar/test"
     , FE doesNotExistErrorType ".biegunka/biegunka-tar-test"
     ]
@@ -168,6 +168,6 @@ compressed = TestCase $ do
 
 helper :: FilePath -> Script Sources () -> Layout -> [LayoutException] -> IO ()
 helper d s l xs = do
-  biegunka (set root "~") (profile "biegunka-tar-test" s) (execute id)
+  biegunka (set root "~") (execute id) (profile "biegunka-tar-test" s)
   xs' <- check l d
   assertEqual "tar-tests" xs xs'

@@ -118,6 +118,6 @@ advanced = TestCase $ do
 
 helper :: FilePath -> Script Sources () -> Layout -> [LayoutException] -> IO ()
 helper d s l xs = do
-  biegunka (set root "~") (profile "biegunka-zip-test" s) (execute id)
+  biegunka (set root "~") (execute id) (profile "biegunka-zip-test" s)
   xs' <- check l d
   assertEqual "zip-tests" xs xs'
