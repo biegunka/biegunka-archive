@@ -5,7 +5,7 @@ module Main where
 import System.Exit (exitFailure, exitSuccess)
 import System.IO.Error
 
-import Biegunka
+import Biegunka hiding (check)
 import Biegunka.Source.Tar
 import Control.Lens
 import System.Directory (getHomeDirectory)
@@ -168,6 +168,6 @@ compressed = TestCase $ do
 
 helper :: FilePath -> Script Sources () -> Layout -> [LayoutException] -> IO ()
 helper d s l xs = do
-  biegunka (set root "~") (execute id) (profile "biegunka-tar-test" s)
+  biegunka (set root "~") (run id) (profile "biegunka-tar-test" s)
   xs' <- check l d
   assertEqual "tar-tests" xs xs'

@@ -6,7 +6,7 @@ import Prelude hiding (zip)
 import System.Exit (exitFailure, exitSuccess)
 import System.IO.Error
 
-import Biegunka
+import Biegunka hiding (check)
 import Biegunka.Source.Zip
 import Control.Lens
 import System.Directory (getHomeDirectory)
@@ -118,6 +118,6 @@ advanced = TestCase $ do
 
 helper :: FilePath -> Script Sources () -> Layout -> [LayoutException] -> IO ()
 helper d s l xs = do
-  biegunka (set root "~") (execute id) (profile "biegunka-zip-test" s)
+  biegunka (set root "~") (run id) (profile "biegunka-zip-test" s)
   xs' <- check l d
   assertEqual "zip-tests" xs xs'
