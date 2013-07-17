@@ -1,5 +1,5 @@
 {-# OPTIONS_HADDOCK hide #-}
-module Biegunka.Source.Archive (update) where
+module Control.Biegunka.Source.Archive (update) where
 
 import Control.Applicative ((<$>))
 import Control.Monad (when)

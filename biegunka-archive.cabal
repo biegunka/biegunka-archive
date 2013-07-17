@@ -1,5 +1,5 @@
 Name: biegunka-archive
-Version: 0.1.0.0
+Version: 0.2.0.0
 Synopsis: Tar/Zip archives support as Source.
 License: MIT
 License-file: LICENSE
@@ -10,49 +10,55 @@ Cabal-Version: >= 1.8
 Build-Type: Simple
 
 Library
-  Build-Depends: base >= 3 && < 5,
-                 biegunka-core,
-                 filepath,
-                 directory,
-                 free,
-                 zlib,
-                 bzlib,
-                 tar,
-                 zip-archive,
-                 download-curl,
-                 SHA,
-                 bytestring
+  Build-Depends:
+    base          >= 4.5 && < 5,
+    biegunka      >= 0.2,
+    bytestring,
+    bzlib,
+    directory,
+    download-curl,
+    filepath,
+    free,
+    SHA,
+    tar,
+    zip-archive,
+    zlib
   HS-Source-Dirs: src
-  Exposed-Modules: Biegunka.Source.Tar
-                   Biegunka.Source.Zip
-  Other-Modules: Biegunka.Source.Archive
-  GHC-Options: -Wall
-               -fno-warn-unused-do-bind
+  Exposed-Modules:
+    Control.Biegunka.Source.Tar
+    Control.Biegunka.Source.Zip
+  Other-Modules:
+    Control.Biegunka.Source.Archive
+  GHC-Options:
+    -Wall
+    -fno-warn-unused-do-bind
 
 test-suite biegunka-tar-tests
   type: exitcode-stdio-1.0
-  build-depends: base >= 3 && < 5,
-                 biegunka-core,
-                 biegunka-archive,
-                 directory,
-                 filepath,
-                 lens,
-                 HUnit,
-                 directory-layout >= 0.3.0.0
+  build-depends:
+    base             >= 4 && < 5,
+    biegunka-archive,
+    biegunka         >= 0.2,
+    directory-layout >= 0.3,
+    filepath,
+    HUnit,
+    lens
   main-is: tests/tar/Main.hs
-  ghc-options: -Wall
-               -fno-warn-unused-do-bind
+  ghc-options:
+    -Wall
+    -fno-warn-unused-do-bind
 
 test-suite biegunka-zip-tests
   type: exitcode-stdio-1.0
-  build-depends: base >= 3 && < 5,
-                 biegunka-core,
-                 biegunka-archive,
-                 directory,
-                 filepath,
-                 lens,
-                 HUnit,
-                 directory-layout >= 0.3.0.0
+  build-depends:
+    base             >= 4 && < 5,
+    biegunka-archive,
+    biegunka         >= 0.2,
+    directory-layout >= 0.3,
+    filepath,
+    HUnit,
+    lens
   main-is: tests/zip/Main.hs
-  ghc-options: -Wall
-               -fno-warn-unused-do-bind
+  ghc-options:
+    -Wall
+    -fno-warn-unused-do-bind

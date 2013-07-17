@@ -6,10 +6,9 @@ import Prelude hiding (zip)
 import System.Exit (exitFailure, exitSuccess)
 import System.IO.Error
 
-import Biegunka hiding (check)
-import Biegunka.Source.Zip
+import Control.Biegunka hiding (check)
+import Control.Biegunka.Source.Zip
 import Control.Lens
-import System.Directory (getHomeDirectory)
 import System.Directory.Layout
 import Test.HUnit
 
@@ -31,12 +30,13 @@ main = do
 -- Assumes ~/zip directory does exist
 basic :: Test
 basic = TestCase $ do
-  w <- getHomeDirectory
-
   -- Unpack test zip archive and check layout is correct
-  helper w b l []
+  helper "/tmp" b l []
   -- Delete everything
-  helper w b' l' [DE doesNotExistErrorType "zip/test", FE doesNotExistErrorType ".biegunka/biegunka-zip-test"]
+  helper "/tmp" b' l'
+    [ DE doesNotExistErrorType "zip/test"
+    , FE doesNotExistErrorType ".biegunka/profiles/zip.profile"
+    ]
  where
   b =
     zip_ "http://budueba.com/biegunka-zip-test.zip" "zip/test"
@@ -53,14 +53,16 @@ basic = TestCase $ do
           file_ "u"
         file_ "q"
     directory ".biegunka" $
-      file_ "biegunka-zip-test"
+      directory "profiles" $
+        file_ "zip.profile"
 
   b' = return ()
   l' = do
     directory "zip" $
       directory_ "test"
     directory ".biegunka" $
-      file_ "biegunka-zip-test"
+      directory "profiles" $
+        file_ "zip.profile"
 
 
 -- | Test advanced .zip handling
@@ -68,16 +70,15 @@ basic = TestCase $ do
 -- Assumes ~/sandbox/zip directory does exist
 advanced :: Test
 advanced = TestCase $ do
-  w <- getHomeDirectory
   -- Unpack test zip archive, copy some things
   -- and check layout is correct
-  helper w b l []
+  helper "/tmp" b l []
   -- Delete everything
-  helper w b' l'
+  helper "/tmp" b' l'
     [ DE doesNotExistErrorType "zip/test"
     , RF doesNotExistErrorType "sandbox/zip/s" "test1\n"
     , RF doesNotExistErrorType "sandbox/zip/t" "test2\n"
-    , FE doesNotExistErrorType ".biegunka/biegunka-zip-test"
+    , FE doesNotExistErrorType ".biegunka/profiles/zip.profile"
     ]
 
  where
@@ -102,7 +103,8 @@ advanced = TestCase $ do
         file "s" "test1\n"
         file "t" "test2\n"
     directory ".biegunka" $
-      file_ "biegunka-zip-test"
+      directory "profiles" $
+        file_ "zip.profile"
 
   b' = return ()
   l' = do
@@ -113,11 +115,12 @@ advanced = TestCase $ do
         file "s" "test1\n"
         file "t" "test2\n"
     directory ".biegunka" $
-      file_ "biegunka-zip-test"
+      directory "profiles" $
+        file_ "zip.profile"
 
 
 helper :: FilePath -> Script Sources () -> Layout -> [LayoutException] -> IO ()
 helper d s l xs = do
-  biegunka (set root "~") (run id) (profile "biegunka-zip-test" s)
+  biegunka (set root "/tmp" . set appData "/tmp/.biegunka") (run id) (profile "zip" s)
   xs' <- check l d
   assertEqual "zip-tests" xs xs'

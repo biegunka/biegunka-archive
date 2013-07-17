@@ -5,10 +5,9 @@ module Main where
 import System.Exit (exitFailure, exitSuccess)
 import System.IO.Error
 
-import Biegunka hiding (check)
-import Biegunka.Source.Tar
+import Control.Biegunka hiding (check)
+import Control.Biegunka.Source.Tar
 import Control.Lens
-import System.Directory (getHomeDirectory)
 import System.Directory.Layout
 import Test.HUnit
 
@@ -31,14 +30,12 @@ main = do
 -- Assumes ~/tar directory does exist
 basic :: Test
 basic = TestCase $ do
-  w <- getHomeDirectory
-
   -- Unpack test tar archive and check layout is correct
-  helper w b l []
+  helper "/tmp" b l []
   -- Delete everything
-  helper w b' l'
+  helper "/tmp" b' l'
     [ DE doesNotExistErrorType "tar/test"
-    , FE doesNotExistErrorType ".biegunka/biegunka-tar-test"
+    , FE doesNotExistErrorType ".biegunka/profiles/tar.profile"
     ]
  where
   b =
@@ -56,14 +53,16 @@ basic = TestCase $ do
           file_ "u"
         file_ "q"
     directory ".biegunka" $
-      file_ "biegunka-tar-test"
+      directory "profiles" $
+        file_ "tar.profile"
 
   b' = return ()
   l' = do
     directory "tar" $
       directory_ "test"
     directory ".biegunka" $
-      file_ "biegunka-tar-test"
+      directory "profiles" $
+        file_ "tar.profile"
 
 
 -- | Test advanced .tar handling
@@ -71,16 +70,15 @@ basic = TestCase $ do
 -- Assumes ~/sandbox/tar directory does exist
 advanced :: Test
 advanced = TestCase $ do
-  w <- getHomeDirectory
   -- Unpack test tar archive, copy some things
   -- and check layout is correct
-  helper w b l []
+  helper "/tmp" b l []
   -- Delete everything
-  helper w b' l'
+  helper "/tmp" b' l'
     [ DE doesNotExistErrorType "tar/test"
     , RF doesNotExistErrorType "sandbox/tar/s" "test1\n"
     , RF doesNotExistErrorType "sandbox/tar/t" "test2\n"
-    , FE doesNotExistErrorType ".biegunka/biegunka-tar-test"
+    , FE doesNotExistErrorType ".biegunka/profiles/tar.profile"
     ]
  where
   b =
@@ -104,7 +102,8 @@ advanced = TestCase $ do
         file "s" "test1\n"
         file "t" "test2\n"
     directory ".biegunka" $
-      file_ "biegunka-tar-test"
+      directory "profiles" $
+        file_ "tar.profile"
 
   b' = return ()
   l' = do
@@ -115,28 +114,27 @@ advanced = TestCase $ do
         file "s" "test1\n"
         file "t" "test2\n"
     directory ".biegunka" $
-      file_ "biegunka-tar-test"
+      directory "profiles" $
+        file_ "tar.profile"
 
 
 -- | Test compressed .tar handling
 -- Assumes ~/tar directory does exist
 compressed :: Test
 compressed = TestCase $ do
-  w <- getHomeDirectory
-
   -- Uncompress and unpack gzipped tar archive and check layout is correct
-  helper w bgz l []
+  helper "/tmp" bgz l []
   -- Delete everything
-  helper w b' l'
+  helper "/tmp" b' l'
     [ DE doesNotExistErrorType "tar/test"
-    , FE doesNotExistErrorType ".biegunka/biegunka-tar-test"
+    , FE doesNotExistErrorType ".biegunka/profiles/tar.profile"
     ]
   -- Uncompress and unpack bzipped tar archive and check layout is correct
-  helper w bbz2 l []
+  helper "/tmp" bbz2 l []
   -- Delete everything
-  helper w b' l'
+  helper "/tmp" b' l'
     [ DE doesNotExistErrorType "tar/test"
-    , FE doesNotExistErrorType ".biegunka/biegunka-tar-test"
+    , FE doesNotExistErrorType ".biegunka/profiles/tar.profile"
     ]
  where
   bgz =
@@ -156,18 +154,20 @@ compressed = TestCase $ do
           file_ "u"
         file_ "q"
     directory ".biegunka" $
-      file_ "biegunka-tar-test"
+      directory "profiles" $
+        file_ "tar.profile"
 
   b' = return ()
   l' = do
     directory "tar" $
       directory_ "test"
     directory ".biegunka" $
-      file_ "biegunka-tar-test"
+      directory "profiles" $
+        file_ "tar.profile"
 
 
 helper :: FilePath -> Script Sources () -> Layout -> [LayoutException] -> IO ()
 helper d s l xs = do
-  biegunka (set root "~") (run id) (profile "biegunka-tar-test" s)
+  biegunka (set root "/tmp" . set appData "/tmp/.biegunka") (run id) (profile "tar" s)
   xs' <- check l d
   assertEqual "tar-tests" xs xs'
