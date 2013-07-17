@@ -35,6 +35,7 @@ basic = TestCase $ do
   -- Delete everything
   helper "/tmp" b' l'
     [ DE doesNotExistErrorType "zip/test"
+    , DE doesNotExistErrorType ".biegunka/profiles"
     , FE doesNotExistErrorType ".biegunka/profiles/zip.profile"
     ]
  where
@@ -78,6 +79,7 @@ advanced = TestCase $ do
     [ DE doesNotExistErrorType "zip/test"
     , RF doesNotExistErrorType "sandbox/zip/s" "test1\n"
     , RF doesNotExistErrorType "sandbox/zip/t" "test2\n"
+    , DE doesNotExistErrorType ".biegunka/profiles"
     , FE doesNotExistErrorType ".biegunka/profiles/zip.profile"
     ]
 

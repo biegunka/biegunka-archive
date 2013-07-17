@@ -35,6 +35,7 @@ basic = TestCase $ do
   -- Delete everything
   helper "/tmp" b' l'
     [ DE doesNotExistErrorType "tar/test"
+    , DE doesNotExistErrorType ".biegunka/profiles"
     , FE doesNotExistErrorType ".biegunka/profiles/tar.profile"
     ]
  where
@@ -78,6 +79,7 @@ advanced = TestCase $ do
     [ DE doesNotExistErrorType "tar/test"
     , RF doesNotExistErrorType "sandbox/tar/s" "test1\n"
     , RF doesNotExistErrorType "sandbox/tar/t" "test2\n"
+    , DE doesNotExistErrorType ".biegunka/profiles"
     , FE doesNotExistErrorType ".biegunka/profiles/tar.profile"
     ]
  where
@@ -127,6 +129,7 @@ compressed = TestCase $ do
   -- Delete everything
   helper "/tmp" b' l'
     [ DE doesNotExistErrorType "tar/test"
+    , DE doesNotExistErrorType ".biegunka/profiles"
     , FE doesNotExistErrorType ".biegunka/profiles/tar.profile"
     ]
   -- Uncompress and unpack bzipped tar archive and check layout is correct
@@ -134,6 +137,7 @@ compressed = TestCase $ do
   -- Delete everything
   helper "/tmp" b' l'
     [ DE doesNotExistErrorType "tar/test"
+    , DE doesNotExistErrorType ".biegunka/profiles"
     , FE doesNotExistErrorType ".biegunka/profiles/tar.profile"
     ]
  where
