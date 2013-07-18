@@ -34,9 +34,9 @@ basic = TestCase $ do
   helper "/tmp" b l []
   -- Delete everything
   helper "/tmp" b' l'
-    [ DE doesNotExistErrorType "tar/test"
-    , DE doesNotExistErrorType ".biegunka/profiles"
+    [ DE doesNotExistErrorType ".biegunka/profiles"
     , FE doesNotExistErrorType ".biegunka/profiles/tar.profile"
+    , DE doesNotExistErrorType "tar/test"
     ]
  where
   b =
@@ -76,11 +76,11 @@ advanced = TestCase $ do
   helper "/tmp" b l []
   -- Delete everything
   helper "/tmp" b' l'
-    [ DE doesNotExistErrorType "tar/test"
+    [ DE doesNotExistErrorType ".biegunka/profiles"
+    , FE doesNotExistErrorType ".biegunka/profiles/tar.profile"
     , RF doesNotExistErrorType "sandbox/tar/s" "test1\n"
     , RF doesNotExistErrorType "sandbox/tar/t" "test2\n"
-    , DE doesNotExistErrorType ".biegunka/profiles"
-    , FE doesNotExistErrorType ".biegunka/profiles/tar.profile"
+    , DE doesNotExistErrorType "tar/test"
     ]
  where
   b =
@@ -128,17 +128,17 @@ compressed = TestCase $ do
   helper "/tmp" bgz l []
   -- Delete everything
   helper "/tmp" b' l'
-    [ DE doesNotExistErrorType "tar/test"
-    , DE doesNotExistErrorType ".biegunka/profiles"
+    [ DE doesNotExistErrorType ".biegunka/profiles"
     , FE doesNotExistErrorType ".biegunka/profiles/tar.profile"
+    , DE doesNotExistErrorType "tar/test"
     ]
   -- Uncompress and unpack bzipped tar archive and check layout is correct
   helper "/tmp" bbz2 l []
   -- Delete everything
   helper "/tmp" b' l'
-    [ DE doesNotExistErrorType "tar/test"
-    , DE doesNotExistErrorType ".biegunka/profiles"
+    [ DE doesNotExistErrorType ".biegunka/profiles"
     , FE doesNotExistErrorType ".biegunka/profiles/tar.profile"
+    , DE doesNotExistErrorType "tar/test"
     ]
  where
   bgz =
