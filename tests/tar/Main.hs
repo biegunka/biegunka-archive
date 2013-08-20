@@ -34,9 +34,7 @@ basic = TestCase $ do
   helper "/tmp" b l []
   -- Delete everything
   helper "/tmp" b' l'
-    [ DE doesNotExistErrorType ".biegunka/profiles"
-    , FE doesNotExistErrorType ".biegunka/profiles/tar.profile"
-    , DE doesNotExistErrorType "tar/test"
+    [ DE doesNotExistErrorType "tar/test"
     ]
  where
   b =
@@ -54,16 +52,14 @@ basic = TestCase $ do
           file_ "u"
         file_ "q"
     directory ".biegunka" $
-      directory "profiles" $
-        file_ "tar.profile"
+      directory_ "groups"
 
   b' = return ()
   l' = do
     directory "tar" $
       directory_ "test"
     directory ".biegunka" $
-      directory "profiles" $
-        file_ "tar.profile"
+      directory_ "groups"
 
 
 -- | Test advanced .tar handling
@@ -76,17 +72,15 @@ advanced = TestCase $ do
   helper "/tmp" b l []
   -- Delete everything
   helper "/tmp" b' l'
-    [ DE doesNotExistErrorType ".biegunka/profiles"
-    , FE doesNotExistErrorType ".biegunka/profiles/tar.profile"
-    , RF doesNotExistErrorType "sandbox/tar/s" "test1\n"
+    [ RF doesNotExistErrorType "sandbox/tar/s" "test1\n"
     , RF doesNotExistErrorType "sandbox/tar/t" "test2\n"
     , DE doesNotExistErrorType "tar/test"
     ]
  where
   b =
     tar "http://budueba.com/biegunka-tar-test.tar" "tar/test" $ do
-      copy "x/y/s" "sandbox/tar/s"
-      copy "x/y/t" "sandbox/tar/t"
+      copy "x/y/s" ("sandbox/tar/s" :: String)
+      copy "x/y/t" ("sandbox/tar/t" :: String)
   l = do
     directory "tar" $
       directory "test" $ do
@@ -104,8 +98,7 @@ advanced = TestCase $ do
         file "s" "test1\n"
         file "t" "test2\n"
     directory ".biegunka" $
-      directory "profiles" $
-        file_ "tar.profile"
+      directory_ "groups"
 
   b' = return ()
   l' = do
@@ -116,8 +109,7 @@ advanced = TestCase $ do
         file "s" "test1\n"
         file "t" "test2\n"
     directory ".biegunka" $
-      directory "profiles" $
-        file_ "tar.profile"
+      directory_ "groups"
 
 
 -- | Test compressed .tar handling
@@ -128,17 +120,13 @@ compressed = TestCase $ do
   helper "/tmp" bgz l []
   -- Delete everything
   helper "/tmp" b' l'
-    [ DE doesNotExistErrorType ".biegunka/profiles"
-    , FE doesNotExistErrorType ".biegunka/profiles/tar.profile"
-    , DE doesNotExistErrorType "tar/test"
+    [ DE doesNotExistErrorType "tar/test"
     ]
   -- Uncompress and unpack bzipped tar archive and check layout is correct
   helper "/tmp" bbz2 l []
   -- Delete everything
   helper "/tmp" b' l'
-    [ DE doesNotExistErrorType ".biegunka/profiles"
-    , FE doesNotExistErrorType ".biegunka/profiles/tar.profile"
-    , DE doesNotExistErrorType "tar/test"
+    [ DE doesNotExistErrorType "tar/test"
     ]
  where
   bgz =
@@ -158,20 +146,18 @@ compressed = TestCase $ do
           file_ "u"
         file_ "q"
     directory ".biegunka" $
-      directory "profiles" $
-        file_ "tar.profile"
+      directory_ "groups"
 
   b' = return ()
   l' = do
     directory "tar" $
       directory_ "test"
     directory ".biegunka" $
-      directory "profiles" $
-        file_ "tar.profile"
+      directory_ "groups"
 
 
 helper :: FilePath -> Script Sources () -> Layout -> [LayoutException] -> IO ()
 helper d s l xs = do
-  biegunka (set root "/tmp" . set appData "/tmp/.biegunka") (run id) (profile "tar" s)
+  biegunka (set root "/tmp" . set appData "/tmp/.biegunka") run (profile "tar" s)
   xs' <- check l d
   assertEqual "tar-tests" xs xs'
