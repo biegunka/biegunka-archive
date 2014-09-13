@@ -1,5 +1,5 @@
 biegunka-archive
 ===============
-[![Build Status](https://drone.io/github.com/biegunka/biegunka-archive/status.png)](https://drone.io/github.com/biegunka/biegunka-archive/latest)
+[![Build Status](https://secure.travis-ci.org/biegunka/biegunka-archive.png?branch=master)](http://travis-ci.org/biegunka/biegunka-archive)
 
 Tar/Zip archives support as Source.

@@ -1,0 +1,19 @@
+language: haskell
+
+ghc:
+ - 7.8
+
+before_install:
+    - cabal install alex --constraint='transformers >= 0.4'
+    - cabal install happy
+    - cabal install c2hs
+    - cabal install cabal-install cabalg
+
+install:
+    - cabalg https://github.com/biegunka/biegunka@develop
+    - cabal install --dependencies-only
+    - cabal configure --enable-tests
+
+script:
+    - cabal build
+    - cabal test
